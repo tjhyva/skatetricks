@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webpalvelinohjelmointi harjoitystyö  - Tomi Hyvärinen N3652</title>
+    <style>
+        html {
+            margin: 10px 20px 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Web-palvelinohjelmointi ttms0900-3004<br>Harjoitystyö Skatetricks<br>Tomi Hyvärinen N3652<br>Pvm.3.12.2020</h1>
+    
+    <h2>Suunnitelma</h2>
+        <p>Suunnitelmana oli toteuttaa rullalauta sovellus joka mahdollistaisi omien videoiden esittelyn esim. youtuben avulla kaikille.
+            Sovelluksessa olisi mahdollisuus poistaa/lisätä omia videoita ja "tykätä" muiden videoista (nämä ominaisuudet vaatisivat kirjautumisen), 
+            myös videoiden muokkaaminen olisi mahdollista.</p>
+    <h2>Toteutus</h2>
+        <h3>Aloitus</h3>
+            <p>Työ alkoi uuden Laravel projektin asentamisella. Käyttöymäristönä toimi localhost ja XAMPP.</p>        
+            <p>Toteutus alkoi paperille käsin piirretyllä layoutilla, tämä auttoi minua hahmottamaan, mitä tulen tarvitsemaan työhöni. 
+                Seuraavaksi tein etusivun näkymän, etusivun näkymä pysyikin melkein muuttumattomana loppuun asti, pari pientä muutosta vain vaati.</p>
+                <a href="kuvat/layout.jpg"><img height="200" src="kuvat/layout.jpg"></a>
+                
+        <h3>Tietokanta</h3>
+            <p>Tietokannan luonnissa käytin migraatioita, aluksi ajoin Laravelin omat valmiiksi tehdyt tietokannat, josta sain User-taulun käyttööni.
+              Seuraavaksi loin category-taulun, johon lisäsin tarvittavat kategoriat sovellusta varten. 
+              Viimeisenä tuli trick-taulu: tähän tuli huomattavasti enemmän rivejä kuin muihin, ja tätä piti rollbackatä paljon.          
+              Seuraavaksi loin tietokantojen yhteydet:</p>
+              <div><a href="kuvat/tietokanta.JPG"><img height="200" src="kuvat/tietokanta.JPG"></a></div>
+              <p>Migraation yhteydessä luotiin myös Modelit, joiden avulla voidaan hallita tietokanta-käskyjä ja suojauksia. Näihin myös muutin yhteyksien muodot, esim. one-to-many jne. </p>
+              <div><a href="kuvat/tietokanta_lara.JPG"><img height="200" src="kuvat/tietokanta_lara.JPG"></a></div>
+              
+              
+              <p><b>Tietokannan luominen vaatikin vähän enemmän suunnittelua, kuin mitä olin alun perin suunnitellut.</b></p>
+
+        <h3>Sovellus</h3>
+            <p>Aloitin sovelluksen tekemisen etusivulla, etusivulle hain tietokannasta reittien ja HomeControllerin avulla kaikki kategoriat (functio hakee muuttujaan $categories kaikki Catergory taulussa olevat tiedot tämän jälkeen ohjataan home sivulle jolle välitetään categories tiedot) ja loin tämän tiedon avulla buttonit, joihin liitin linkit.                
+                Seauraavaksi loin uuden TrickControllerin (php artisan make:controller TrickController), johon tein reitin ja näkymä sivun. Muokkasin etusivun buttoneiden osoitetta siten, että nämä ohjaisivat näkymän 
+                oikealle kategoria sivulle käyttäen taas reittejä ja controlleria.                
+                <div><a href="kuvat/frontbage.JPG"><img height="200" src="kuvat/frontbage.JPG"></a><a href="kuvat/category_functio.JPG"><img height="100" src="kuvat/category_functio.JPG"></a></div><div><a href="kuvat/frontbage_code.JPG"><img height="200" src="kuvat/frontbage_code.JPG"></a></div>
+            <p>Tässä välissä rupesin tekemään master-templatea (app.blade) etusivun mukaan, jotta saisin mahdollisimman helposti näkymät tuotua sivulle, tämä muuttui matkan varrella koko ajan</p> 
+            <p>Trick-sivun teko: tämä sivu vei noin 80% koko työstä. Aloitin tuomalla otsikon sivulle minkä kategorian on valinnut. 
+                Seuraavaksi loin tablen johon pistin otsikot tempun tiedoista.</p>
+             <p>Tämän jälkeen tarvitsi lisätä "dump" dataa tietokantaan, lisäsin Userin ja uuden trickin tinkerin avulla</p>
+             <div><a href="kuvat/tinker_add_data.JPG"><img height="200" src="kuvat/tinker_add_data.JPG"></a></div>
+             <p>Trick taulun näkymään sain tuotua tiedot tietokannasta "pienen" taistelun jälkeen.</p>
+             <p>Login, register, logout, forgotpassword: näissä käytin apuna Laravelin omia pohjia. Loin linkit mastertemplate-tiedostoon jotka ohjaavat halutulle sivulle esim. login,
+                jonka jälkeen onnistuneen kirjautumisen jälkeen ohjataan /home sivulle jonne vain kirjautunut pääsee</p>
+                <div><a href="kuvat/login.JPG"><img height="200" src="kuvat/login.JPG"></a><a href="kuvat/login_logged.JPG"><img height="200" src="kuvat/login_logged.JPG"></a></div>   
+            <p>Kirjautuneen käyttäjän näkymää muokkasin @guest authentikaation avulla. Tällä pystyin määrittelemään mitä näkyy kirjautuneelle käyttäjälle ja mitä näkyy ei kirjautuneelle</p>            
+            <p>Input formin avulla käyttäjä saa luotua uuden tempun, tämä vaati vähän enemmän aikaa: formin muokkailu, controlerin toiminta ja modelin muokkaus jotta pystyisi tallentamman tietokantaan </p>
+            <div><a href="kuvat/guest.JPG"><img height="100" src="kuvat/guest.JPG"></a></div>
+            <div><a href="kuvat/newtrick_form.JPG"><img height="100" src="kuvat/newtrick_form.JPG"></a><a href="kuvat/newtrick_controller.JPG"><img height="100" src="kuvat/newtrick_controller.JPG"></a><a href="kuvat/newtrick_model.JPG"><img height="50" src="kuvat/newtrick_model.JPG"></a></div>
+            <p>Like button oli kivuton luoda, kirjautunut käyttäjä ei pysty tykkäämään omista kuvista, muille käyttäjä pystyy peukuttamaan myös kirjautumaton käyttä ei pysty peukuttamaan videoita</p>
+            <p>Tempujen järjestäminen tapahtui SQL:n avulla ensin järjestetään peukkujen mukaan, seuraavaksi @forech loopilla loopataan kuvat että ensin tulee käyttäjän kuvat sitten muiden</p>
+            <div><a href="kuvat/trick_order_layout.JPG"><img height="100" src="kuvat/trick_order_layout.JPG"></a></div>
+            <p>Tempun postaminen tapahtuu tempun id:n mukaan ja pelkästään tempun omistaja voi poistaa tempun, edellisessä kuvassa delete nappi oikealla laidassa</p>
+            <p>Melkein kaiki tieto joka käsiteltiin trick sivulla, käsiteltiin TrickControllerin kautta(ensimmäisessä kuvassa functio ottaa kategorian nimen,
+                 jota verrataan tietokannan Category name johon haku pysähtyy,
+                tämän jälkeen tieto välittyy muuttujalle $category muuttujalle, 
+                seuraavaksi käydään läpi Trick taulua josta haetaan 
+                $categoryn ID:tä vastaavaa ID:tä jä nämä tiedot asetetaan muuttujalle $original_tricks, 
+                luodaan uusi lista nimeltä tricks jonne lisätään seuraavan foreach loopin avulla tarvittavat tiedot, jonka jälkeen tätä välitetään sivulle käytettäväksi.)</p>
+            <div><a href="kuvat/trick_details_functio.JPG"><img height="200" src="kuvat/trick_details_functio.JPG"></a></div>
+            <p>Sama TrickControlleri, (functio like ottaa vastaan tempun $id:n ja onko painettu peukkua ylös (1) vai alas (0) $like, käydään läpi Trick taulua kunnes id:t on samoja, 
+                tämän jälkeen tarkistetaan onko $like 1 eli lisätään yksi ylöspäinpeukulle vai $like nolla lisätään yksi alaspäinpeukulle, 
+                tämän jälkeen tietotallennetaan ja ohjataan takasin samalle sivulle)</p>
+                <p>functio destroy ottaa vatsaan tempun id:n $id jonka jälkeen titokannasta etsitään vastaava id ja temppu poistetaan ja ohjataan takaisin samalle sivulle</p>
+                <p>functio store ottaa vastaan syötetystä kentästä objektin, luodaan uusi Trick jolle käydään kaikki request tiedot läpi yksitellen ja tallennetaan tietokantaan jonka jälkeen uusi temppu lisätty ja ohjataan takasin samalle sivulle</p>
+            <div><a href="kuvat/trick_like_store_destroy_functio.JPG"><img height="400" src="kuvat/trick_like_store_destroy_functio.JPG"></div>
+
+        </p>
+     <h2>Esittelyvideo</h2>   
+        <a style="font-size: 20px;" href="video/2020-12-03 21-55-40.mp4">Esittelyvideo</a>
+    <h2>Lähdekoodit</h2>
+        <a style="font-size: 20px;" href="Lahdekoodit/">Lähdekoodit</a>
+    <h2>Zip-paketti</h2>    
+    <a style="font-size: 20px;" href="zippaketti.zip">Zip-paketti</a>
+    <h2>Käyttöliitymä kuvia + tietokanta</h2>        
+        <div><a href="kuviakayttoliittymasta/Etusivu.JPG"><img height="200" src="kuviakayttoliittymasta/Etusivu.JPG"></a><a href="kuviakayttoliittymasta/login_etusivu.JPG"><img height="200" src="kuviakayttoliittymasta/login_etusivu.JPG"></a></div>
+        <div><a href="kuviakayttoliittymasta/temppusivu.JPG"><img height="200" src="kuviakayttoliittymasta/temppusivu.JPG"></a><a href="kuviakayttoliittymasta/login_temppusivu.JPG"><img height="200" src="kuviakayttoliittymasta/login_temppusivu.JPG"></a></div>
+        <div><a href="kuviakayttoliittymasta/login.JPG"><img height="200" src="kuviakayttoliittymasta/login.JPG"></a><a href="kuviakayttoliittymasta/register.JPG"><img height="200" src="kuviakayttoliittymasta/register.JPG"></a></div>                
+        <div><a href="kuvat/phpmyadmin.JPG"><img height="150" src="kuvat/phpmyadmin.JPG"></a></div>
+    <h2>Arvosanaehdotus</h2>    
+    <p>Onnistuin mielestäni hyvin tässä projektissa toki vielä vähän voisi parannella tätä esim.temppujen muokkausta en kerennyt tekemaan enkä tykkäysten rajoittamista 1kpl/temppu.
+        Dokumentointi olisi saanut olla laajempi. 
+        Arvosanaksi antaisin itselleni tästä 3,5/5,0</p>
+    <p>Ps. ensi kerralla muistan tehdä dokumentaation samalla kun teen projektia :)</p>
+</body>
+</html>
