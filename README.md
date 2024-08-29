@@ -1,5 +1,3 @@
-#Skatetricks
-
 ### School project skatetricks
 
 Project made with PHP in Laravel. This project has login, register, add new skatetricks, like- and dislike-button.
